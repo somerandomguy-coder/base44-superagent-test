@@ -13,6 +13,7 @@ export interface IngestedItem {
   sentimentScore: number; // 0 - 100
   topics: string[];
   readingTimeSec: number;
+  upvotes: number;
 }
 
 export interface DynamicStats {
@@ -76,7 +77,7 @@ const KNOWN_DOMAIN_TOPICS = [
  * Analyzes a single raw message on the fly
  */
 export function analyzeItemOnTheFly(
-  raw: { id?: string; text: string; author?: string; source?: IngestedItem['source']; timestamp?: string }
+  raw: { id?: string; text: string; author?: string; source?: IngestedItem['source']; timestamp?: string; upvotes?: number }
 ): IngestedItem {
   const text = raw.text.trim();
   const words = text.split(/\s+/).filter(Boolean);
@@ -177,6 +178,7 @@ export function analyzeItemOnTheFly(
     sentimentScore,
     topics,
     readingTimeSec: Math.max(1, Math.ceil(wordCount / 4)),
+    upvotes: raw.upvotes ?? 1,
   };
 }
 
